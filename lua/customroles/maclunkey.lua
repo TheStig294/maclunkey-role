@@ -25,6 +25,21 @@ ROLE.convars = {}
 ROLE.shouldactlikejester = function(ply) return not ply:IsRoleActive() end
 ROLE.translations = {}
 ROLE.shoulddelayshop = true
+
+ROLE.moverolestate = function(source, target, keepOnSource)
+    if source:IsRoleActive() then
+        target:SetNWBool("RevealedMaclunkey", true)
+
+        if target:HasWeapon("ttt_maclunkey_role_weapon") then
+            target:StripWeapon("ttt_maclunkey_role_weapon")
+        end
+    end
+
+    if not keepOnSource then
+        source:SetNWBool("RevealedMaclunkey", false)
+    end
+end
+
 RegisterRole(ROLE)
 RunConsoleCommand("ttt_maclunkey_shop_active_only", "0")
 RunConsoleCommand("ttt_maclunkey_shop_delay", "1")

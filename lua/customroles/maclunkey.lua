@@ -76,3 +76,16 @@ if SERVER then
         end
     end)
 end
+
+if CLIENT then
+    hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(role, titleLabel, roleIcon)
+        if role == ROLE_MACLUNKEY then
+            local roleColor = ROLE_COLORS[ROLE_TRAITOR]
+            local jesterRoleColor = ROLE_COLORS[ROLE_JESTER]
+            local teamName = GetRoleTeamName(ROLE_TRAITOR)
+            local jesterTeamName = GetRoleTeamName(ROLE_TEAM_JESTER)
+
+            return "<p>The " .. ROLE_STRINGS[ROLE_MACLUNKEY] .. " is a member of the <span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>" .. teamName .. " team</span> who pretends to be a <span style='color: rgb(" .. jesterRoleColor.r .. ", " .. jesterRoleColor.g .. ", " .. jesterRoleColor.b .. ")'>" .. jesterTeamName .. "</span>. <br>They are immune to environmental damage and cannot damage others, until they shoot their <span style='color: rgb(" .. roleColor.r .. ", " .. roleColor.g .. ", " .. roleColor.b .. ")'>" .. ROLE_STRINGS[ROLE_MACLUNKEY] .. " gun</span>.<br><br>- Appears as a " .. jesterTeamName .. " to those that can see a " .. jesterTeamName .. ", until their " .. ROLE_STRINGS[ROLE_MACLUNKEY] .. " gun is shot (including their " .. teamName .. " buddy!)<br><br>- Possible to also have a " .. jesterTeamName .. " in the round</p>"
+        end
+    end)
+end

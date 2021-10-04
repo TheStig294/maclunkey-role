@@ -18,17 +18,11 @@ ROLE.loadout = {"ttt_maclunkey_role_weapon"}
 ROLE.startingcredits = nil
 ROLE.startinghealth = nil
 ROLE.maxhealth = nil
-ROLE.isactive = nil
+ROLE.isactive = function(ply) return ply:GetNWBool("RevealedMaclunkey", false) end
 ROLE.selectionpredicate = nil
 ROLE.convars = {}
-
 -- Helper function that handles all of the maclunkies' jester logic, e.g. appearing as a jester to other traitors
-ROLE.shouldactlikejester = function(ply)
-    if ply:GetNWBool("RevealedMaclunkey") then return false end
-
-    return true
-end
-
+ROLE.shouldactlikejester = function(ply) return not ply:IsRoleActive() end
 ROLE.translations = {}
 RegisterRole(ROLE)
 

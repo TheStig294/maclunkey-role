@@ -6,15 +6,20 @@ ROLE.nameext = "a Maclunkey"
 ROLE.nameshort = "mak"
 ROLE.desc = [[You are {role}! {comrades}
 You're immune to environmental damage and cannot damage others
-...until you shoot your "Maclunkey Gun"!
+...until you shoot your "{role} Gun"!
 
-Pretend to be a jester, then surprise everyone!]]
+Pretend to be {ajester}, then surprise everyone!]]
 ROLE.team = ROLE_TEAM_TRAITOR
 
 ROLE.shop = {"item_armor", "item_radar", "item_disg"}
 
 ROLE.loadout = {"ttt_maclunkey_role_weapon"}
 
+ROLE.startingcredits = nil
+ROLE.startinghealth = nil
+ROLE.maxhealth = nil
+ROLE.isactive = nil
+ROLE.selectionpredicate = nil
 ROLE.convars = {}
 
 -- Helper function that handles all of the maclunkies' jester logic, e.g. appearing as a jester to other traitors
@@ -24,9 +29,12 @@ ROLE.shouldactlikejester = function(ply)
     return true
 end
 
+ROLE.translations = {}
 RegisterRole(ROLE)
 
 if SERVER then
+    AddCSLuaFile()
+
     -- Prints a message to all jesters at the start of a round, telling them there is a maclunkey
     hook.Add("TTTBeginRound", "MaclunkeyAlertMessage", function()
         timer.Simple(1, function()

@@ -48,6 +48,10 @@ SWEP.NoSights = true
 
 function SWEP:Initialize()
     self:SetDeploySpeed(self.WeaponDeploySpeed)
+
+    if CLIENT then
+        self.PrintName = ROLE_STRINGS[ROLE_MACLUNKEY] .. " Gun"
+    end
 end
 
 function SWEP:Deploy()

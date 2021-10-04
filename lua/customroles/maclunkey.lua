@@ -32,6 +32,7 @@ ROLE.moverolestate = function(source, target, keepOnSource)
 
         if target:HasWeapon("ttt_maclunkey_role_weapon") then
             target:StripWeapon("ttt_maclunkey_role_weapon")
+            target:PrintMessage(HUD_PRINTCENTER, "Their " .. ROLE_STRINGS[ROLE_MACLUNKEY] .. " Gun was used!")
         end
     end
 

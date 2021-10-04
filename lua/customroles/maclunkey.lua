@@ -24,7 +24,10 @@ ROLE.convars = {}
 -- Helper function that handles all of the maclunkies' jester logic, e.g. appearing as a jester to other traitors
 ROLE.shouldactlikejester = function(ply) return not ply:IsRoleActive() end
 ROLE.translations = {}
+ROLE.shoulddelayshop = true
 RegisterRole(ROLE)
+RunConsoleCommand("ttt_maclunkey_shop_active_only", "0")
+RunConsoleCommand("ttt_maclunkey_shop_delay", "1")
 
 if SERVER then
     AddCSLuaFile()

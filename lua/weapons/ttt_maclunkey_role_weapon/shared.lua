@@ -90,6 +90,7 @@ function SWEP:PrimaryAttack()
 
     timer.Simple(0.1, function()
         if SERVER then
+            self:GetOwner():GiveDelayedShopItems()
             self:Remove()
         end
     end)

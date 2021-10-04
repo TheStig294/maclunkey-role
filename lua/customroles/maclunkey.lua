@@ -16,6 +16,14 @@ ROLE.shop = {"item_armor", "item_radar", "item_disg"}
 ROLE.loadout = {"ttt_maclunkey_role_weapon"}
 
 ROLE.convars = {}
+
+-- Helper function that handles all of the maclunkies' jester logic, e.g. appearing as a jester to other traitors
+ROLE.shouldactlikejester = function(ply)
+    if ply:GetNWBool("RevealedMaclunkey") then return false end
+
+    return true
+end
+
 RegisterRole(ROLE)
 
 if SERVER then
@@ -39,5 +47,11 @@ if SERVER then
                 end
             end
         end)
+    end)
+
+    hook.Add("TTTPrepareRound", "MaclunkeyRoleReset", function()
+        for i, ply in ipairs(player.GetAll()) do
+            ply:SetNWBool("RevealedMaclunkey", false)
+        end
     end)
 end

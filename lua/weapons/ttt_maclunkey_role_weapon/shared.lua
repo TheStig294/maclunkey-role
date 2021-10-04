@@ -1,5 +1,4 @@
 AddCSLuaFile()
-local classname = "ttt_maclunkey_role_weapon"
 local ShootSound = Sound("weapons/maclunkey_shoot.wav")
 local DrawSound = Sound("weapons/maclunkey_draw.wav")
 
@@ -11,7 +10,7 @@ if CLIENT then
 
     SWEP.EquipMenuData = {
         type = "Weapon",
-        desc = "While in your inventory, you cannot deal damage. \nWhile held, you take double damage. \n\nShoots a laser that kills in one shot."
+        desc = "Shoots a laser that kills in one shot."
     }
 end
 
@@ -80,6 +79,7 @@ end
 
 function SWEP:PrimaryAttack()
     if (not self:CanPrimaryAttack()) then return end
+    self:GetOwner():SetNWBool("RevealedMaclunkey", true)
     self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
     self:Shoot()
     self:TakePrimaryAmmo(1)
@@ -106,15 +106,3 @@ function SWEP:Shoot()
     self:GetOwner():FireBullets(bullet)
     self:GetOwner():EmitSound(ShootSound, 75, 100, 1, CHAN_AUTO)
 end
-
-hook.Add("EntityTakeDamage", "MaclunkeyAlteredDamage", function(target, dmginfo)
-    local attacker = dmginfo:GetAttacker()
-
-    if attacker and attacker:IsPlayer() and attacker:HasWeapon(classname) and attacker:GetActiveWeapon():GetClass() ~= classname then
-        -- If someone is holding the maclunkey gun but not using it, negate the damage they deal
-        return true
-    elseif target and target:IsPlayer() and target:HasWeapon(classname) and (dmginfo:GetDamageType() == DMG_GENERIC or dmginfo:GetDamageType() == DMG_CRUSH or dmginfo:GetDamageType() == DMG_BURN or dmginfo:GetDamageType() == DMG_FALL or dmginfo:GetDamageType() == DMG_BLAST) then
-        -- If someone is holding the maclunkey gun, they are immune to the same types of damage the jester is
-        return true
-    end
-end)

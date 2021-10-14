@@ -10,7 +10,7 @@ if CLIENT then
 
     SWEP.EquipMenuData = {
         type = "Weapon",
-        desc = "Shoots a laser that kills in one shot."
+        desc = "Takes a second to draw, then shoots a deadly laser shot!"
     }
 end
 
@@ -48,6 +48,10 @@ SWEP.NoSights = true
 
 function SWEP:Initialize()
     self:SetDeploySpeed(self.WeaponDeploySpeed)
+
+    if ConVarExists("ttt_maclunkey_gun_damage") then
+        self.Primary.Damage = GetConVar("ttt_maclunkey_gun_damage"):GetInt()
+    end
 
     if CLIENT then
         self.PrintName = ROLE_STRINGS[ROLE_MACLUNKEY] .. " Gun"

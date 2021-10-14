@@ -1,3 +1,7 @@
+CreateConVar("ttt_maclunkey_gun_damage", "1000", {FCVAR_NOTIFY}, "Sets the damage dealt by the Maclunkey Gun", 0, 2000)
+
+CreateConVar("ttt_maclunkey_jester_highlights", "1", {FCVAR_NOTIFY}, "Can the Maclunkey be seen as a jester?", 0, 1)
+
 local ROLE = {}
 ROLE.nameraw = "maclunkey"
 ROLE.name = "Maclunkey"
@@ -18,11 +22,29 @@ ROLE.loadout = {"ttt_maclunkey_role_weapon"}
 ROLE.startingcredits = nil
 ROLE.startinghealth = nil
 ROLE.maxhealth = nil
-ROLE.isactive = function(ply) return ply:GetNWBool("RevealedMaclunkey", false) end
 ROLE.selectionpredicate = nil
 ROLE.convars = {}
--- Helper function that handles all of the maclunkies' jester logic, e.g. appearing as a jester to other traitors
-ROLE.shouldactlikejester = function(ply) return not ply:IsRoleActive() end
+
+table.insert(ROLE.convars, {
+    cvar = "ttt_maclunkey_gun_damage",
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 0
+})
+
+table.insert(ROLE.convars, {
+    cvar = "ttt_maclunkey_jester_highlights",
+    type = ROLE_CONVAR_TYPE_BOOL
+})
+
+if GetConVar("ttt_maclunkey_jester_highlights"):GetBool() then
+    -- Helper functions that handle all of the maclunkies' jester logic, if jester halos are enabled.
+    ROLE.isactive = function(ply) return ply:GetNWBool("RevealedMaclunkey", false) end
+    ROLE.shouldactlikejester = function(ply) return not ply:IsRoleActive() end
+else
+    ROLE.isactive = nil
+    ROLE.shouldactlikejester = nil
+end
+
 ROLE.translations = {}
 ROLE.shoulddelayshop = true
 
@@ -47,6 +69,22 @@ RunConsoleCommand("ttt_maclunkey_shop_delay", "1")
 
 if SERVER then
     AddCSLuaFile()
+
+    if GetConVar("ttt_maclunkey_jester_highlights"):GetBool() == false then
+        -- Makes the maclunkey gun handle the jester damage, so the jester halos for the Maclunkey can be removed
+        hook.Add("EntityTakeDamage", "MaclunkeyAlteredDamage", function(target, dmginfo)
+            local attacker = dmginfo:GetAttacker()
+            local classname = "ttt_maclunkey_role_weapon"
+
+            if attacker and attacker:IsPlayer() and attacker:HasWeapon(classname) and attacker:GetActiveWeapon():GetClass() ~= classname then
+                -- If someone is holding the maclunkey gun but not using it, negate the damage they deal
+                return true
+            elseif target and target:IsPlayer() and target:HasWeapon(classname) and (dmginfo:GetDamageType() == DMG_GENERIC or dmginfo:GetDamageType() == DMG_CRUSH or dmginfo:GetDamageType() == DMG_BURN or dmginfo:GetDamageType() == DMG_FALL or dmginfo:GetDamageType() == DMG_BLAST) then
+                -- If someone is holding the maclunkey gun, they are immune to the same types of damage the jester is
+                return true
+            end
+        end)
+    end
 
     -- Prints a message to all jesters at the start of a round, telling them there is a maclunkey
     hook.Add("TTTBeginRound", "MaclunkeyAlertMessage", function()

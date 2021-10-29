@@ -5,7 +5,7 @@ local DrawSound = Sound("weapons/maclunkey_draw.wav")
 if CLIENT then
     SWEP.PrintName = "Maclunkey Gun"
     SWEP.Slot = 8
-    SWEP.Icon = "VGUI/ttt/ttt_maclunkey_role_weapon.png"
+    SWEP.Icon = "VGUI/ttt/roles/mak/ttt_maclunkey_role_weapon.png"
     SWEP.ViewModelFOV = 75
 
     SWEP.EquipMenuData = {

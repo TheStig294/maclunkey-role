@@ -116,7 +116,7 @@ if SERVER then
 end
 
 if CLIENT then
-    hook.Add("TTTTutorialRoleText", "SummonerTutorialRoleText", function(role, titleLabel, roleIcon)
+    hook.Add("TTTTutorialRoleText", "MaclunkeyTutorialRoleText", function(role, titleLabel, roleIcon)
         if role == ROLE_MACLUNKEY then
             local roleColor = ROLE_COLORS[ROLE_TRAITOR]
             local jesterRoleColor = ROLE_COLORS[ROLE_JESTER]

@@ -23,6 +23,7 @@ ROLE.startingcredits = nil
 ROLE.startinghealth = nil
 ROLE.maxhealth = nil
 ROLE.selectionpredicate = nil
+ROLE.shortdesc = "Pretends to be a jester. Immune to environmental damage and cannot damage others until shooting their special gun"
 ROLE.convars = {}
 
 table.insert(ROLE.convars, {
@@ -76,11 +77,11 @@ if SERVER then
             local attacker = dmginfo:GetAttacker()
             local classname = "ttt_maclunkey_role_weapon"
 
+            -- If someone is holding the maclunkey gun but not using it, negate the damage they deal
+            -- If someone is holding the maclunkey gun, they are immune to the same types of damage the jester is
             if attacker and attacker:IsPlayer() and attacker:HasWeapon(classname) and attacker:GetActiveWeapon():GetClass() ~= classname then
-                -- If someone is holding the maclunkey gun but not using it, negate the damage they deal
                 return true
             elseif target and target:IsPlayer() and target:HasWeapon(classname) and (dmginfo:GetDamageType() == DMG_GENERIC or dmginfo:GetDamageType() == DMG_CRUSH or dmginfo:GetDamageType() == DMG_BURN or dmginfo:GetDamageType() == DMG_FALL or dmginfo:GetDamageType() == DMG_BLAST) then
-                -- If someone is holding the maclunkey gun, they are immune to the same types of damage the jester is
                 return true
             end
         end)

@@ -1,7 +1,8 @@
-CreateConVar("ttt_maclunkey_gun_damage", "1000", {FCVAR_NOTIFY}, "Sets the damage dealt by the Maclunkey Gun", 0, 2000)
-
-CreateConVar("ttt_maclunkey_jester_highlights", "1", {FCVAR_NOTIFY}, "Can the Maclunkey be seen as a jester?", 0, 1)
-
+CreateConVar("ttt_maclunkey_gun_damage", "1000", nil, "Sets the damage dealt by the Maclunkey Gun", 0, 2000)
+local jesterHighlightsCvar = CreateConVar("ttt_maclunkey_jester_highlights", "1", FCVAR_REPLICATED, "0 - Maclunkey's appearance works like a traitor, 1 - Maclunkey's appearance works like a jester until shooting the Maclunkey gun, 2 - Maclunkey's appearance works like a jester until shooting the Maclunkey gun, but appears as a traitor to fellow traitors", 0, 2)
+local HIGHLIGHTS_TRAITOR = 0
+local HIGHLIGHTS_JESTER = 1
+local HIGHLIGHTS_MIXED = 2
 local ROLE = {}
 ROLE.nameraw = "maclunkey"
 ROLE.name = "Maclunkey"
@@ -34,14 +35,15 @@ table.insert(ROLE.convars, {
 
 table.insert(ROLE.convars, {
     cvar = "ttt_maclunkey_jester_highlights",
-    type = ROLE_CONVAR_TYPE_BOOL
+    type = ROLE_CONVAR_TYPE_NUM,
+    decimal = 0
 })
 
-if GetConVar("ttt_maclunkey_jester_highlights"):GetBool() then
+if jesterHighlightsCvar:GetInt() == HIGHLIGHTS_JESTER then
     -- Helper functions that handle all of the maclunkies' jester logic, if jester halos are enabled.
     ROLE.isactive = function(ply) return ply:GetNWBool("RevealedMaclunkey", false) end
     ROLE.shouldactlikejester = function(ply) return not ply:IsRoleActive() end
-else
+elseif jesterHighlightsCvar:GetInt() == HIGHLIGHTS_TRAITOR then
     ROLE.isactive = nil
     ROLE.shouldactlikejester = nil
 end
@@ -71,7 +73,7 @@ RunConsoleCommand("ttt_maclunkey_shop_delay", "1")
 if SERVER then
     AddCSLuaFile()
 
-    if GetConVar("ttt_maclunkey_jester_highlights"):GetBool() == false then
+    if jesterHighlightsCvar:GetInt() == HIGHLIGHTS_TRAITOR then
         -- Makes the maclunkey gun handle the jester damage, so the jester halos for the Maclunkey can be removed
         hook.Add("EntityTakeDamage", "MaclunkeyAlteredDamage", function(target, dmginfo)
             local attacker = dmginfo:GetAttacker()
